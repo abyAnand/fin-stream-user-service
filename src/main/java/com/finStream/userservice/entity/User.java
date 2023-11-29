@@ -8,6 +8,7 @@ import jakarta.persistence.Transient;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -37,5 +38,6 @@ public class User extends BaseEntity{
     private String password;
     @Transient
     private List<Account> Accounts;
+
 
 }

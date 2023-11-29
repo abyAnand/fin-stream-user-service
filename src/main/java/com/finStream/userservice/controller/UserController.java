@@ -89,7 +89,7 @@ public class UserController {
      *
      * @return A list of UserDto wrapped in a ResponseEntity with status OK.
      */
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<UserDto>> findAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
     }
