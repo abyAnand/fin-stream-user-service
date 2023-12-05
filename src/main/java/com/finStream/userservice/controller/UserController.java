@@ -4,6 +4,7 @@ import com.finStream.userservice.dto.UserDto;
 import com.finStream.userservice.dto.UserRequest;
 import com.finStream.userservice.entity.User;
 import com.finStream.userservice.service.IUserService;
+import com.finStream.userservice.service.client.AccountsFeignClient;
 import com.finStream.userservice.service.impl.UserServiceImpl;
 import feign.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,7 @@ public class UserController {
     private final IUserService userService;
 
 
+
     /**
      * Creates a new user based on the provided request data.
      *
@@ -81,6 +83,7 @@ public class UserController {
     )
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> findUserById(@PathVariable UUID userId) {
+
         return ResponseEntity.ok(userService.getUser(userId));
     }
 

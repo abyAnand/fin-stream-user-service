@@ -11,7 +11,7 @@ import java.util.UUID;
  * The IUserService interface defines the contract for interacting with user-related operations
  * in the application. Implementations of this interface provide functionality for creating, retrieving,
  * updating, and deleting user records, as well as retrieving a list of all users.
- * @author Abi Anan
+ * @author Abi Anand
  * @version 1.0.0
  * @since 1.0.0
  */
@@ -45,9 +45,8 @@ public interface IUserService {
      * Deletes a user with the specified userId.
      *
      * @param userId The unique identifier of the user to be deleted.
-     * @return A boolean indicating whether the user was successfully deleted.
      */
-    boolean deleteUser(UUID userId);
+    void deleteUser(UUID userId);
 
     /**
      * Retrieves a list of all users in the system.

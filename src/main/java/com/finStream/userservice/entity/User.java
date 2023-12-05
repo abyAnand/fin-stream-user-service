@@ -1,9 +1,8 @@
 package com.finStream.userservice.entity;
 
 
-import com.finStream.userservice.VO.Account;
+import com.finStream.userservice.VO.AccountDto;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.*;
 
@@ -36,8 +35,6 @@ public class User extends BaseEntity{
     private String username;
     private String email;
     private String password;
-    @Transient
-    private List<Account> Accounts;
 
 
 }

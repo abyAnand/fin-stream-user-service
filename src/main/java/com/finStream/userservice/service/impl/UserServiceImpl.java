@@ -1,5 +1,6 @@
 package com.finStream.userservice.service.impl;
 
+import com.finStream.userservice.VO.AccountDto;
 import com.finStream.userservice.dto.UserDto;
 import com.finStream.userservice.dto.UserRequest;
 import com.finStream.userservice.entity.User;
@@ -8,14 +9,15 @@ import com.finStream.userservice.exception.UsernameAlreadyExistsException;
 import com.finStream.userservice.mapper.UserMapper;
 import com.finStream.userservice.repository.UserRepository;
 import com.finStream.userservice.service.IUserService;
+import com.finStream.userservice.service.client.AccountsFeignClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +35,7 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepo;
     private final UserMapper userMapper;
+    private final AccountsFeignClient accountsClient;
 
     /**
      * Creates a new user based on the provided user request.
@@ -64,8 +67,22 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public UserDto getUser(UUID userId) {
-        User user = userRepo.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+        UserDto userDto = fetchUserAndConvertToDto(userId);
+        List<AccountDto> accounts = fetchAccountsForUser(userId);
+        userDto.setAccounts(accounts);
+        return userDto;
+    }
+
+    private UserDto fetchUserAndConvertToDto(UUID userId) {
+        User user = userRepo.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("User not found with id: " + userId)
+        );
         return UserMapper.INSTANCE.mapUserToUserDto(user);
+    }
+
+    private List<AccountDto> fetchAccountsForUser(UUID userId) {
+        ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
+        return response.getBody();
     }
 
 
@@ -101,12 +118,11 @@ public class UserServiceImpl implements IUserService {
      * If the user is not found, a UserNotFoundException is thrown.
      *
      * @param userId The unique identifier of the user to be deleted.
-     * @return True if the user is successfully marked as deleted.
      * @throws UserNotFoundException if the user with the specified ID is not found.
      */
     @Override
-    public boolean deleteUser(UUID userId) {
-        return userRepo.findById(userId)
+    public void deleteUser(UUID userId) {
+        userRepo.findById(userId)
                 .map(user -> {
                     user.setDeleted(true);
                     userRepo.save(user);

@@ -1,11 +1,13 @@
 package com.finStream.userservice.dto;
 
+import com.finStream.userservice.VO.AccountDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -30,4 +32,5 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
+    private List<AccountDto> Accounts;
 }
