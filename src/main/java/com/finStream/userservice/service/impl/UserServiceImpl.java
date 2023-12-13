@@ -40,17 +40,23 @@ public class UserServiceImpl implements IUserService {
     /**
      * Creates a new user based on the provided user request.
      *
-     * @param userRequest The data transfer object containing user details.
+     * @param userDto The data transfer object containing user details.
      * @return The newly created User entity.
      * @throws UsernameAlreadyExistsException if the username already exists.
      */
     @Override
-    public User createUser(UserRequest userRequest) {
-        if(usernameExist(userRequest.getUsername())){
-            throw new UsernameAlreadyExistsException(userRequest.getUsername());
+    public User createUser(UserDto userDto) {
+        if(emailExist(userDto.getEmail())){
+            throw new UsernameAlreadyExistsException(userDto.getEmail());
         }
 
-        User user = userMapper.mapUserRequestToUser(userRequest);
+//        User user = userMapper.mapUserDtoToUser(userDto);
+        User user = User.builder()
+                .id(userDto.getId())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .email(userDto.getEmail())
+                .build();
         user.setCreatedDate(LocalDateTime.now());
 //        user.setCreatedBy("SELF");
         return userRepo.save(user);
@@ -69,7 +75,7 @@ public class UserServiceImpl implements IUserService {
     public UserDto getUser(UUID userId) {
         UserDto userDto = fetchUserAndConvertToDto(userId);
         List<AccountDto> accounts = fetchAccountsForUser(userId);
-        userDto.setAccounts(accounts);
+//        userDto.setAccounts(accounts);
         return userDto;
     }
 
@@ -81,6 +87,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     private List<AccountDto> fetchAccountsForUser(UUID userId) {
+        ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
+        return response.getBody();
+    }
+    private List<AccountDto> fetchAccountsForUser(Integer userId) {
         ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
         return response.getBody();
     }
@@ -99,13 +109,13 @@ public class UserServiceImpl implements IUserService {
     public UserDto updateUser(UserDto userDto) {
         Optional<User> existingUser = userRepo.findById(userDto.getId());
         if (existingUser.isPresent()) {
-            boolean isSameUser = existingUser.get().getUsername().equals(userDto.getUsername());
-            boolean usernameExists = usernameExist(userDto.getUsername());
+            boolean isSameUser = existingUser.get().getEmail().equals(userDto.getEmail());
+            boolean emailExist = emailExist(userDto.getEmail());
 
-            if (isSameUser || !usernameExists) {
+            if (isSameUser || !emailExist) {
                 return convertAndSaveUser(userDto);
             } else {
-                throw new UsernameAlreadyExistsException("User already exists for this username " + userDto.getUsername());
+                throw new UsernameAlreadyExistsException("User already exists for this email " + userDto.getEmail());
             }
         } else {
             throw new UserNotFoundException("User not found with id: " + userDto.getId());
@@ -142,8 +152,15 @@ public class UserServiceImpl implements IUserService {
         return userRepo.findAll()
                 .stream()
                 .filter(this::isNotDeleted)
-                .map(userMapper::mapUserToUserDto)
+                .map(this::mapUserToDtoWithAccounts)
                 .collect(Collectors.toList());
+    }
+
+    private UserDto mapUserToDtoWithAccounts(User user) {
+        UserDto userDto = userMapper.mapUserToUserDto(user);
+        List<AccountDto> accounts = fetchAccountsForUser(user.getId());
+//        userDto.setAccounts(accounts);
+        return userDto;
     }
 
     /**
@@ -160,11 +177,11 @@ public class UserServiceImpl implements IUserService {
     /**
      * Checks if a username already exists in the database.
      *
-     * @param username The username to check.
+     * @param email The username to check.
      * @return True if the username exists, false otherwise.
      */
-    private boolean usernameExist(String username){
-        return userRepo.findByUsername(username).isPresent();
+    private boolean emailExist(String email){
+        return userRepo.findByEmail(email).isPresent();
     }
 
 
@@ -172,16 +189,16 @@ public class UserServiceImpl implements IUserService {
      * Helper method to check if a provided username is assigned to the same user.
      *
      * @param currentUserId The ID of the user to check against.
-     * @param username The username to check.
+     * @param email The email to check.
      * @return True if the username is assigned to the user with the given ID, false otherwise.
      * @throws UserNotFoundException if the user with the specified ID is not found.
      */
-    private boolean isSameUser(UUID currentUserId, String username){
+    private boolean isSameUser(UUID currentUserId, String email){
         User userByUserId = userRepo.findById(currentUserId)
                 .orElseThrow(
                         () -> new UserNotFoundException("User not found with id: " + currentUserId)
                 );
-        return userByUserId.getUsername().equals(username);
+        return userByUserId.getEmail().equals(email);
     }
 
 

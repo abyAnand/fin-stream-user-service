@@ -20,10 +20,10 @@ public interface IUserService {
     /**
      * Creates a new user based on the provided user request data.
      *
-     * @param userRequest The object containing user data to be saved.
+     * @param userDto The object containing user data to be saved.
      * @return The newly created user object.
      */
-    User createUser(UserRequest userRequest);
+    User createUser(UserDto userDto);
 
     /**
      * Retrieves a user by their unique identifier (userId).

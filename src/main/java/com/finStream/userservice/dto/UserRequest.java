@@ -38,7 +38,4 @@ public class UserRequest {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password must not be blank")
-    @Size(min = 6, message = "Password must have at least 6 characters")
-    private String password;
 }

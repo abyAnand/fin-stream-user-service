@@ -49,7 +49,7 @@ public class UserController {
     /**
      * Creates a new user based on the provided request data.
      *
-     * @param userRequest The user request data.
+     * @param userDto The user request data.
      * @return The created User wrapped in a ResponseEntity with status CREATED.
      */
     @Operation(
@@ -61,9 +61,9 @@ public class UserController {
             description = "HTTP Status Created"
     )
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<User> createUser(@RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userService.createUser(userRequest));
+                .body(userService.createUser(userDto));
     }
 
 

@@ -21,8 +21,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Retrieves an optional User entity by searching for a user with the given username.
      *
-     * @param username The username to search for.
+     * @param email The username to search for.
      * @return An Optional containing the User entity if found, or an empty Optional if not found.
      */
-    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    Optional<User> findById(UUID id);
 }
