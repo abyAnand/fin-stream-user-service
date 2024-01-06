@@ -3,6 +3,7 @@ package com.finStream.userservice.entity;
 
 import com.finStream.userservice.VO.AccountDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
 import lombok.*;
 
@@ -27,14 +28,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Builder
-public class User extends BaseEntity{
+public class User extends  BaseEntity{
 
-
+    @Id
+    private UUID id;
     private String firstName;
     private String lastName;
-    private String username;
     private String email;
-    private String password;
 
 
 }

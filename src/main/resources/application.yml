@@ -10,6 +10,21 @@ spring:
     config:
       enabled: true
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+rabbitmq:
+  queue:
+    json:
+      name: demo_json_queue
+  exchange:
+    name: demo_exchange
+  routing:
+    json:
+      key: demo_json_routing
 
 
 eureka:
