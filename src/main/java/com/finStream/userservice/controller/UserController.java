@@ -104,6 +104,7 @@ public class UserController {
     )
     @PutMapping
     public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
+
         return ResponseEntity.ok(userService.updateUser(userDto));
     }
 

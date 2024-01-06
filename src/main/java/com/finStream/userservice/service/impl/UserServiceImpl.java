@@ -2,7 +2,6 @@ package com.finStream.userservice.service.impl;
 
 import com.finStream.userservice.VO.AccountDto;
 import com.finStream.userservice.dto.UserDto;
-import com.finStream.userservice.dto.UserRequest;
 import com.finStream.userservice.entity.User;
 import com.finStream.userservice.exception.UserNotFoundException;
 import com.finStream.userservice.exception.UsernameAlreadyExistsException;

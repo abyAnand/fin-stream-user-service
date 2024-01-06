@@ -31,6 +31,7 @@ import java.time.LocalDate;
 @ControllerAdvice
 public class UserExceptionHandler {
 
+
     /**
      * Handles the case where a username already exists in the system.
      * Logs the occurrence and returns an appropriate error response.
