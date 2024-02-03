@@ -38,14 +38,7 @@ eureka:
 endpoints:
   shutdown:
     enabled: true
-management:
-  endpoint:
-    shutdown:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+
 
 #logging:
 #  level:
