@@ -73,7 +73,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto getUser(UUID userId) {
         UserDto userDto = fetchUserAndConvertToDto(userId);
-        List<AccountDto> accounts = fetchAccountsForUser(userId);
+
+        //TODO: connect with accountservice and add the details
+
+//        List<AccountDto> accounts = fetchAccountsForUser(userId);
 //        userDto.setAccounts(accounts);
         return userDto;
     }

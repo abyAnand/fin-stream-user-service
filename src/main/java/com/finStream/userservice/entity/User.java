@@ -2,9 +2,9 @@ package com.finStream.userservice.entity;
 
 
 import com.finStream.userservice.VO.AccountDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+import com.finStream.userservice.enums.CollateralType;
+import com.finStream.userservice.enums.EmploymentStatus;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -35,6 +35,18 @@ public class User extends  BaseEntity{
     private String firstName;
     private String lastName;
     private String email;
+    @Enumerated(EnumType.STRING)
+    private EmploymentStatus employmentStatus;
+    private double monthlyIncome;
+    private double totalAssets;
+    private double totalLiabilities;
+//    @Enumerated(EnumType.STRING)
+//    private CollateralType collateralType;
+//    private String collateralDescription;
+//    private double collateralValue;
+//
+//    private String vehicleNumber;
+//    private UUID collateralAccountId;
 
 
 }

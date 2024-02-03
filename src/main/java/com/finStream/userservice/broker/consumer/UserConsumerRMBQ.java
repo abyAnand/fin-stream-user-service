@@ -21,12 +21,12 @@ public class UserConsumerRMBQ {
 
     private final UserServiceImpl userService;
 
-    @RabbitListener(queues = {"${rabbitmq.queue.json.name}"})
-    public void consumeUserDto(UserDto userDto){
-        log.info(String.format("consuming user -> %s", userDto.toString()));
-        User user = userService.createUser(userDto);
-        System.out.println(user);
-    }
+//    @RabbitListener(queues = {"${rabbitmq.queue.json.name}"})
+//    public void consumeUserDto(UserDto userDto){
+//        log.info(String.format("consuming user -> %s", userDto.toString()));
+//        User user = userService.createUser(userDto);
+//        System.out.println(user);
+//    }
 
 
 }
