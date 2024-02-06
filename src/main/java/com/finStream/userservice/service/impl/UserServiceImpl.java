@@ -73,11 +73,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto getUser(UUID userId) {
         UserDto userDto = fetchUserAndConvertToDto(userId);
-
-        //TODO: connect with accountservice and add the details
-
-//        List<AccountDto> accounts = fetchAccountsForUser(userId);
-//        userDto.setAccounts(accounts);
+        List<AccountDto> accounts = fetchAccountsForUser(userId);
+        userDto.setAccountList(accounts);
         return userDto;
     }
 
@@ -89,10 +86,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     private List<AccountDto> fetchAccountsForUser(UUID userId) {
-        ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
-        return response.getBody();
-    }
-    private List<AccountDto> fetchAccountsForUser(Integer userId) {
         ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
         return response.getBody();
     }

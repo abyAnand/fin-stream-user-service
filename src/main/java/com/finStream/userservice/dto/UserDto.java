@@ -39,6 +39,7 @@ public class UserDto {
     private double monthlyIncome;
     private double totalAssets;
     private double totalLiabilities;
+    private List<AccountDto> accountList;
 //    @Enumerated(EnumType.STRING)
 //    private CollateralType collateralType;
 //    private String collateralDescription;

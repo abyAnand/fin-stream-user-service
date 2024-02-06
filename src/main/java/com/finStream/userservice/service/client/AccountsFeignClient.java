@@ -18,8 +18,5 @@ public interface AccountsFeignClient {
     @GetMapping(value = "/accounts/user/{userId}", consumes = "application/json")
     public ResponseEntity<List<AccountDto>> findAccountByUserId(@PathVariable UUID userId);
 
-    @GetMapping(value = "/accounts/user/{userId}", consumes = "application/json")
-    public ResponseEntity<List<AccountDto>> findAccountByUserId(@PathVariable Integer userId);
-
 
 }
