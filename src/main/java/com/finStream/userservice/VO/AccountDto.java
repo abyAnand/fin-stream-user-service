@@ -39,4 +39,8 @@ public class AccountDto {
     private int accountHoldersLimit;
     private int maxMonthlyTransactions;
     private UUID linkedSavingsAccountId;
+    private int totalTransaction;
+    private int monthlyTransaction;
+    private int yearlyTransaction;
+    private boolean isBlocked;
 }

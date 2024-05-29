@@ -1,6 +1,7 @@
 package com.finStream.userservice.service.impl;
 
 import com.finStream.userservice.VO.AccountDto;
+import com.finStream.userservice.VO.LoanDto;
 import com.finStream.userservice.dto.UserDto;
 import com.finStream.userservice.entity.User;
 import com.finStream.userservice.exception.UserNotFoundException;
@@ -9,6 +10,7 @@ import com.finStream.userservice.mapper.UserMapper;
 import com.finStream.userservice.repository.UserRepository;
 import com.finStream.userservice.service.IUserService;
 import com.finStream.userservice.service.client.AccountsFeignClient;
+import com.finStream.userservice.service.client.LOAN_FEIGN_CLIENT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepo;
     private final UserMapper userMapper;
     private final AccountsFeignClient accountsClient;
+    private final LOAN_FEIGN_CLIENT loanClient;
 
     /**
      * Creates a new user based on the provided user request.
@@ -74,7 +77,9 @@ public class UserServiceImpl implements IUserService {
     public UserDto getUser(UUID userId) {
         UserDto userDto = fetchUserAndConvertToDto(userId);
         List<AccountDto> accounts = fetchAccountsForUser(userId);
+        List<LoanDto> loanList = fetchLoansForUser(userId);
         userDto.setAccountList(accounts);
+        userDto.setLoanList(loanList);
         return userDto;
     }
 
@@ -87,6 +92,11 @@ public class UserServiceImpl implements IUserService {
 
     private List<AccountDto> fetchAccountsForUser(UUID userId) {
         ResponseEntity<List<AccountDto>> response = accountsClient.findAccountByUserId(userId);
+        return response.getBody();
+    }
+
+    private List<LoanDto> fetchLoansForUser(UUID userId) {
+        ResponseEntity<List<LoanDto>> response = loanClient.getAllLoansByUserId(userId);
         return response.getBody();
     }
 
@@ -154,10 +164,11 @@ public class UserServiceImpl implements IUserService {
     private UserDto mapUserToDtoWithAccounts(User user) {
         UserDto userDto = userMapper.mapUserToUserDto(user);
         List<AccountDto> accounts = fetchAccountsForUser(user.getId());
-//        userDto.setAccounts(accounts);
+        List<LoanDto> loanList = fetchLoansForUser(user.getId());
+        userDto.setAccountList(accounts);
+        userDto.setLoanList(loanList);
         return userDto;
     }
-
     /**
      * Helper method to determine if a user is not marked as deleted.
      *

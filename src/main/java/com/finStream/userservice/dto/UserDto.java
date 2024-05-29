@@ -1,6 +1,7 @@
 package com.finStream.userservice.dto;
 
 import com.finStream.userservice.VO.AccountDto;
+import com.finStream.userservice.VO.LoanDto;
 import com.finStream.userservice.enums.CollateralType;
 import com.finStream.userservice.enums.EmploymentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,10 +42,6 @@ public class UserDto {
     private double totalAssets;
     private double totalLiabilities;
     private List<AccountDto> accountList;
-//    @Enumerated(EnumType.STRING)
-//    private CollateralType collateralType;
-//    private String collateralDescription;
-//    private double collateralValue;
-//    private String vehicleNumber;
-//    private AccountDto collateralAccount;
+    private List<LoanDto> loanList;
+    private LocalDateTime createdDate;
 }
