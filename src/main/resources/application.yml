@@ -1,14 +1,23 @@
 spring:
   application:
-    name: "user"
-  profiles:
-    active: "dev"
-  config:
-    import: "optional:configserver:http://localhost:8071/"
+    name: USER-SERVICE
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQLDialect
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/fin_user
+    username: root
+    password: root
   cloud:
     config:
-      enabled: true
+      enabled: false
 
   rabbitmq:
     host: localhost
@@ -26,6 +35,8 @@ rabbitmq:
     json:
       key: demo_json_routing
 
+server:
+  port: 9090
 
 eureka:
   client:
@@ -44,3 +55,23 @@ endpoints:
 #  level:
 #    root: DEBUG
 #    org.springframework: DEBUG
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+
+
+  tracing:
+    sampling:
+      probability: 1.0
