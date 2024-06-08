@@ -35,6 +35,7 @@ public class User extends  BaseEntity{
     private String firstName;
     private String lastName;
     private String email;
+    private int imageId;
     @Enumerated(EnumType.STRING)
     private EmploymentStatus employmentStatus;
     private double monthlyIncome;

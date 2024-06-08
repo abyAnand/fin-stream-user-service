@@ -2,6 +2,7 @@ package com.finStream.userservice.dto;
 
 import com.finStream.userservice.VO.AccountDto;
 import com.finStream.userservice.VO.LoanDto;
+import com.finStream.userservice.entity.Image;
 import com.finStream.userservice.enums.CollateralType;
 import com.finStream.userservice.enums.EmploymentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,6 +37,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
+    private Image image;
     @Enumerated(EnumType.STRING)
     private EmploymentStatus employmentStatus;
     private double monthlyIncome;
@@ -44,4 +46,6 @@ public class UserDto {
     private List<AccountDto> accountList;
     private List<LoanDto> loanList;
     private LocalDateTime createdDate;
+    private boolean blocked;
+    private boolean deleted;
 }

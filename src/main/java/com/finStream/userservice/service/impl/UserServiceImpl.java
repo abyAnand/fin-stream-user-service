@@ -11,6 +11,7 @@ import com.finStream.userservice.repository.UserRepository;
 import com.finStream.userservice.service.IUserService;
 import com.finStream.userservice.service.client.AccountsFeignClient;
 import com.finStream.userservice.service.client.LOAN_FEIGN_CLIENT;
+import com.finStream.userservice.service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements IUserService {
     private final UserMapper userMapper;
     private final AccountsFeignClient accountsClient;
     private final LOAN_FEIGN_CLIENT loanClient;
+    private final ImageService imageService;
 
     /**
      * Creates a new user based on the provided user request.
@@ -87,7 +89,11 @@ public class UserServiceImpl implements IUserService {
         User user = userRepo.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("User not found with id: " + userId)
         );
-        return UserMapper.INSTANCE.mapUserToUserDto(user);
+        UserDto userDto = UserMapper.INSTANCE.mapUserToUserDto(user);
+        if(user.getImageId() > 0){
+            userDto.setImage(imageService.getOne(user.getImageId()));
+        }
+        return userDto;
     }
 
     private List<AccountDto> fetchAccountsForUser(UUID userId) {
@@ -161,6 +167,17 @@ public class UserServiceImpl implements IUserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void blockUser(UUID userId) {
+        userRepo.findById(userId)
+                .map(user -> {
+                    user.setBlocked(true);
+                    userRepo.save(user);
+                    return true;
+                })
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
+    }
+
     private UserDto mapUserToDtoWithAccounts(User user) {
         UserDto userDto = userMapper.mapUserToUserDto(user);
         List<AccountDto> accounts = fetchAccountsForUser(user.getId());
@@ -215,8 +232,17 @@ public class UserServiceImpl implements IUserService {
      * @return The saved user as a UserDto.
      */
     private UserDto convertAndSaveUser(UserDto userDto) {
-        User user = userRepo.save(UserMapper.INSTANCE.mapUserDtoToUser(userDto));
-        return UserMapper.INSTANCE.mapUserToUserDto(user);
+
+        User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
+        if (userDto.getImage() != null) {
+            user.setImageId(userDto.getImage().getId());
+        }
+        user = userRepo.save(user);
+        UserDto savedUserDto = UserMapper.INSTANCE.mapUserToUserDto(user);
+        if (userDto.getImage() != null) {
+            savedUserDto.setImage(userDto.getImage());
+        }
+        return savedUserDto;
     }
 
 

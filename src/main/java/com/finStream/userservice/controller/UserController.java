@@ -2,9 +2,11 @@ package com.finStream.userservice.controller;
 
 import com.finStream.userservice.dto.UserDto;
 import com.finStream.userservice.dto.UserRequest;
+import com.finStream.userservice.entity.Image;
 import com.finStream.userservice.entity.User;
 import com.finStream.userservice.service.IUserService;
 import com.finStream.userservice.service.client.AccountsFeignClient;
+import com.finStream.userservice.service.image.ImageService;
 import com.finStream.userservice.service.impl.UserServiceImpl;
 import feign.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +37,7 @@ import java.util.UUID;
  */
 
 @Tag(
-        name = "API's fOR User Service in Fin Stream",
+        name = "API's for User Service in Fin Stream",
         description = "A REST controller for managing user-related operations"
 )
 @RestController
@@ -43,6 +47,7 @@ import java.util.UUID;
 public class UserController {
 
     private final IUserService userService;
+    private final ImageService imageService;
 
 
 
@@ -124,7 +129,14 @@ public class UserController {
     )
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {
+        System.out.println(userId);
         userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/block/{userId}")
+    public ResponseEntity<Void> blockUser(@PathVariable UUID userId){
+        userService.blockUser(userId);
         return ResponseEntity.noContent().build();
     }
 
@@ -145,6 +157,15 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> findAllUsers(){
         return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    @PostMapping("/image")
+    public ResponseEntity<UserDto> updateAccountSettingWithImage(@RequestPart("bankId") String bankId,
+                                                              @RequestPart("image" ) MultipartFile multipartFile) throws IOException {
+        Image image = imageService.uploadAndSaveImage(multipartFile);
+        UserDto user = userService.getUser(UUID.fromString(bankId));
+        user.setImage(image);
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
 }

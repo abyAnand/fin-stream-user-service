@@ -54,4 +54,6 @@ public interface IUserService {
      * @return A list of UserDto objects representing all users.
      */
     List<UserDto> findAllUsers();
+
+    void blockUser(UUID userId);
 }
